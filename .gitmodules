@@ -1,0 +1,4 @@
+[submodule "liblogicalaccess"]
+	path = liblogicalaccess
+	url = https://github.com/islog/liblogicalaccess
+	branch = develop
