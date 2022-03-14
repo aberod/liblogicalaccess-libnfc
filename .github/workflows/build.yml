@@ -1,0 +1,36 @@
+name: Build
+on:
+  pull_request:
+    branches:
+      - master
+      - develop
+  push:
+    branches:
+      - master
+      - develop
+jobs:
+  build-gcc:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Setup"
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpcsclite-dev
+          pip3 install conan
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: "Build lla"
+        run: |
+          conan create .
+        working-directory: liblogicalaccess
+      - name: "Build libnfc"
+        run: |
+          conan create . 
+        working-directory: vendor/libnfc
+      - name: "Build"
+        run: |
+          mkdir build
+          cd build
+          conan install ..
+          conan build ..
