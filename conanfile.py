@@ -17,10 +17,7 @@ class LLANFCConan(ConanFile):
     exports_sources = "CMakeLists.txt", "cmake*", "plugins*" 
 
     def requirements(self):
-        try:
-            self.requires('LogicalAccess/' + self.version + '@islog/' + self.channel)
-        except ConanException:
-            self.requires('LogicalAccess/' + self.version + '@islog/' + tools.Git().get_branch())
+        self.requires('LogicalAccess/' + self.version)
     
     def configure_cmake(self):
         cmake = CMake(self)
