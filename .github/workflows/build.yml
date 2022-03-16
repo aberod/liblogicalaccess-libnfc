@@ -15,22 +15,37 @@ jobs:
       - name: "Setup"
         run: |
           sudo apt-get update
-          sudo apt-get install -y libpcsclite-dev libusb-dev
+          sudo apt-get upgrade
+          sudo apt-get install -y libusb-dev
           pip3 install conan
-      - uses: actions/checkout@v2
+
+      - name: "Checkout LLA-NFC"
+        uses: actions/checkout@v2
         with:
-          submodules: true
-      - name: "Build lla"
+          path: "lla-nfc" 
+
+      - name: "Checkout LLA"
+        uses: actions/checkout@v2
+        with:
+          repository: "islog/liblogicalaccess"
+          ref: "develop"
+          path: "lla" 
+
+      - name: "Setup LLA"
         run: |
-          conan create .
-        working-directory: liblogicalaccess
-      - name: "Build libnfc"
+          sudo apt-get install -y libpcsclite-dev
+          conan export .
+        working-directory: lla
+
+      - name: "Setup libnfc"
         run: |
-          conan create . 
+          conan export . 
         working-directory: vendor/libnfc
-      - name: "Build"
+
+      - name: "Build LLA-NFC"
         run: |
           mkdir build
           cd build
-          conan install ..
+          conan install .. --build=missing
           conan build ..
+        working-directory: lla-nfc
