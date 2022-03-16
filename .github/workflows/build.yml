@@ -40,7 +40,7 @@ jobs:
       - name: "Setup libnfc"
         run: |
           conan export . 
-        working-directory: vendor/libnfc
+        working-directory: lla-nfc/vendor/libnfc
 
       - name: "Build LLA-NFC"
         run: |
