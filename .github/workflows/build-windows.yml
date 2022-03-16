@@ -1,0 +1,48 @@
+name: Build
+on:
+  pull_request:
+    branches:
+      - master
+      - develop
+  push:
+    branches:
+      - master
+      - develop
+jobs:
+  build-gcc:
+    runs-on: windows-2019
+    steps:
+      - name: "Setup"
+        run: |
+          pip3 install conan
+
+      - name: "Checkout LLA-NFC"
+        uses: actions/checkout@v2
+        with:
+          path: "lla-nfc" 
+
+      - name: "Checkout LLA"
+        uses: actions/checkout@v2
+        with:
+          repository: "islog/liblogicalaccess"
+          ref: "develop"
+          path: "lla" 
+
+      - name: "Setup LLA"
+        run: |
+          sudo apt-get install -y libpcsclite-dev
+          conan export .
+        working-directory: lla
+
+      - name: "Setup libnfc"
+        run: |
+          conan export . 
+        working-directory: lla-nfc/vendor/libnfc
+
+      - name: "Build LLA-NFC"
+        run: |
+          mkdir build
+          cd build
+          conan install .. --build=missing
+          conan build ..
+        working-directory: lla-nfc
