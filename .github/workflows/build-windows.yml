@@ -1,4 +1,4 @@
-name: Build
+name: Build Windows
 on:
   pull_request:
     branches:
@@ -9,7 +9,7 @@ on:
       - master
       - develop
 jobs:
-  build-gcc:
+  build:
     runs-on: windows-2019
     steps:
       - name: "Setup"
@@ -30,7 +30,6 @@ jobs:
 
       - name: "Setup LLA"
         run: |
-          sudo apt-get install -y libpcsclite-dev
           conan export .
         working-directory: lla
 
